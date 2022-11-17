@@ -1,0 +1,18 @@
+Project: Milestone 1
+What comes into the program? 
+1.	Postal codes using the addPostalCode method
+2.	Hub distribution with hub identifier and UTM coordinates using the addDistrubutionHub.
+What transformations do I need to make to the data?
+1.	Using the data added by the data methods, return the list of hubs that have affected the most population
+ What part of the data is processed right away? 
+1.	fixOrder
+2.	mostDamagedPostalCodes
+What part of the data do I need to keep longer? 
+1.	Postal codes
+2.	Distribution Hubs
+What goes out of the program? 
+1.	List of the postal codes of the most damaged area.
+2.	Unserviced postal codes
+3.	Number of people out of service 
+What constraints exist?
+1.	For the method repair plan, the path travelled can only be on the x and y axis.
