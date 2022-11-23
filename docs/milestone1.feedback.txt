@@ -1,0 +1,11 @@
+
+- On data coming in, you can be more explicit about the information like populations and areas of postal codes, or locations of hubs.  
+
+- Your list of transformation basically identifies one method.  There are other direct transformations, like computing hub repair impacts or linking hubs to postal codes, and indirect transformations like algorithms for computing the fix order paths.
+
+- On data processed right away, it boils down to the method parameters and their return values.  You've missed a number of those.
+
+- On data stored longer, you're missing information.  That includes things like repair times and the repair logs.
+
+Overall, you've provided few details to have me understand what you understand of the project.  Consequently, there isn't much feedback that I can provide to you to help you move the project forward.
+
