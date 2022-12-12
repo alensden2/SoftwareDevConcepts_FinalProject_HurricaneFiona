@@ -63,4 +63,32 @@ public class CreateTables {
         }
         return true;
     }
+
+    /**
+     * Creates the Hub tables
+     * */
+    public boolean createHubsTable() {
+        Connection connect = null;
+        Statement statement = null;
+        int resultSet;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            connect = DriverManager.getConnection("jdbc:mysql://db.cs.dal.ca:3306?serverTimezone=UTC&useSSL=false",
+                    username, password);
+            statement = connect.createStatement();
+            statement.execute("use alen;");
+            /*
+             * Stored procedure for getting the customer list
+             */
+            String stat = "CREATE TABLE IF NOT EXISTS Hubs (hubIdentifier VARCHAR(50) NOT NULL, x int NOT NULL, y int NOT NULL, postalCode VARCHAR(6))";
+            resultSet = statement.executeUpdate(stat);
+            statement.close();
+            connect.close();
+        } catch (Exception e) {
+            System.out.println("Connection failed");
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
 }
