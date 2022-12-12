@@ -22,13 +22,13 @@ public class PostalCodeModel {
     Properties identity = new Properties();
     String username = "";
     String password = "";
-    String propertyFilename = "dbConfig.prop";
+    String propertyFilename = "/home/cynos/IdeaProjects/finalProject_B00930528/alen/src/dbConfig.prop";
 
 
     /**
      * Constructor
      */
-    PostalCodeModel(){
+    public PostalCodeModel(){
         /**
          * Reference from lab work
          */
@@ -40,54 +40,6 @@ public class PostalCodeModel {
         } catch (Exception e) {
             return;
         }
-    }
-
-    /**
-     * gets the postal code
-     * @return
-     */
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    /**
-     * sets the postal code
-     * @param postalCode
-     */
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    /**
-     * gets the population
-     * @return
-     */
-    public int getPopulation() {
-        return population;
-    }
-
-    /**
-     * Sets the population
-     * @param population
-     */
-    public void setPopulation(int population) {
-        this.population = population;
-    }
-
-    /**
-     * Gets the area
-     * @return
-     */
-    public int getArea() {
-        return area;
-    }
-
-    /**
-     * Sets area
-     * @param area
-     */
-    public void setArea(int area) {
-        this.area = area;
     }
 
     /**
@@ -105,11 +57,11 @@ public class PostalCodeModel {
      * @param area
      * @return
      */
-    private boolean addPostalCodeToDataBase(String postalCode, int population, int area){
+    public boolean addPostalCodeToDataBase(String postalCode, int population, int area){
         PostalCodeDTO postalCodeDTO = new PostalCodeDTO(postalCode, population, area);
         Connection connect = null;
         Statement statement = null;
-        ResultSet resultSet = null;
+        int resultSet = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -117,17 +69,11 @@ public class PostalCodeModel {
                     username, password);
             statement = connect.createStatement();
             statement.execute("use alen;");
-            /*
-             * Stored procedure for getting the customer list
+            /**
+             * Insert the postal Code
              */
-            String stat = "";
-            resultSet = statement.executeQuery(stat);
-
-            while (resultSet.next()) {
-
-            }
-
-            resultSet.close();
+            String stat = "INSERT INTO PostalCode (postalCode, population, area) VALUES (\""+postalCode+"\","+population+","+area+")";
+            resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();
         } catch (Exception e) {

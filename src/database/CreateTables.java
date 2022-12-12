@@ -12,11 +12,12 @@ public class CreateTables {
     Properties identity = new Properties();
     String username = "";
     String password = "";
-    String propertyFilename = "dbConfig.prop";
+    String propertyFilename = "/home/cynos/IdeaProjects/finalProject_B00930528/alen/src/dbConfig.prop";
 
     /**
-     * Creates the required tables*/
-    public CreateTables(){
+     * Creates the required tables
+     */
+    public CreateTables() {
         /**
          * Reference from lab work
          */
@@ -33,10 +34,10 @@ public class CreateTables {
     /**
      * Creates the postal code tables
      */
-    public boolean CreatePostalCodeTable(){
+    public boolean CreatePostalCodeTable() {
         Connection connect = null;
         Statement statement = null;
-        ResultSet resultSet = null;
+        int resultSet;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -47,10 +48,13 @@ public class CreateTables {
             /*
              * Stored procedure for getting the customer list
              */
-            String stat = "CREATE TABLE IF NOT EXISTS PostalCode(PostalCodeId int NOT NULL AUTO_INCREMENT, postalCode VARCHAR(6), population int NOT NULL, area int NOT NULL, PRIMARY KEY (PostalCodeId)";
-            resultSet = statement.executeQuery(stat);
-
-            resultSet.close();
+            String stat = "CREATE TABLE IF NOT EXISTS PostalCode(" +
+                    "PostalCodeId int NOT NULL AUTO_INCREMENT, " +
+                    "postalCode VARCHAR(6), " +
+                    "population int NOT NULL, " +
+                    "area int NOT NULL, " +
+                    "PRIMARY KEY (PostalCodeId))";
+            resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();
         } catch (Exception e) {
