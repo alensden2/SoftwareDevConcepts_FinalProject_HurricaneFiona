@@ -45,6 +45,7 @@ public class DistrubutionHubModel {
     public void createHubsTable() {
         CreateTables createTables = new CreateTables();
         createTables.createHubsTable();
+        createTables.createHubLocationTable();
     }
 
     /**
@@ -56,7 +57,7 @@ public class DistrubutionHubModel {
      * @param postalCode
      * @return
      */
-    public boolean addHubtoDataBase(String hubIdentifier, int x, int y, String postalCode) {
+    public boolean addHubtoDataBase(String hubIdentifier, String postalCode) {
         Connection connect = null;
         Statement statement = null;
         int resultSet = 0;
@@ -70,8 +71,36 @@ public class DistrubutionHubModel {
             /**
              * Insert the hubs
              */
-            String stat = "INSERT INTO Hubs (hubIdentifier, x, y, postalCode) VALUES (\"" + hubIdentifier + "\"," + x
-                    + "," + y + ",\"" + postalCode + "\")";
+            String stat = "INSERT INTO HubServiceAreas (hubIdentifier, postalCode) VALUES (\"" + hubIdentifier + "\",\"" + postalCode + "\")";
+            resultSet = statement.executeUpdate(stat);
+            statement.close();
+            connect.close();
+        } catch (Exception e) {
+            System.out.println("Connection failed");
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * adding to newly created table
+     */
+    public boolean addHubLocationtoDataBase(String hubIdentifier, int x, int y) {
+        Connection connect = null;
+        Statement statement = null;
+        int resultSet = 0;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            connect = DriverManager.getConnection("jdbc:mysql://db.cs.dal.ca:3306?serverTimezone=UTC&useSSL=false",
+                    username, password);
+            statement = connect.createStatement();
+            statement.execute("use alen;");
+            /**
+             * Insert the hubs
+             */
+            String stat = "INSERT INTO HubLocation (hubIdentifier, x, y) VALUES (\"" + hubIdentifier + "\"," + x
+                    + "," + y + ")";
             resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();

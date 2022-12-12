@@ -66,9 +66,11 @@ public class PowerService {
         List<String> servicedAreasList = new ArrayList<>();
         servicedAreasList.addAll(servicedAreas);
         for (int i = 0; i < servicedAreas.size(); i++) {
-            distrubutionHubController.insertHub(hubIdentifier, location.getX(), location.getY(),
-                    servicedAreasList.get(i));
+            distrubutionHubController.insertHubServiceArea(hubIdentifier, servicedAreasList.get(i));
         }
+
+        // storing the pincode
+        distrubutionHubController.insertHubLocation(hubIdentifier, location.getX(), location.getY());
         return true;
     }
 }

@@ -28,13 +28,23 @@ public class DistrubutionHubController {
      * Adding the data through the model class
      * 
      * @param hubIdentifier
-     * @param x
-     * @param y
      * @param postalCode
      */
-    public void insertHub(String hubIdentifier, int x, int y, String postalCode) {
+    public void insertHubServiceArea(String hubIdentifier, String postalCode) {
         distrubutionHubModel.createHubsTable();
-        distrubutionHubModel.addHubtoDataBase(hubIdentifier, x, y, postalCode);
+        distrubutionHubModel.addHubtoDataBase(hubIdentifier, postalCode);
+    }
+
+    /**
+     * Adding data
+     * 
+     * @param hubIdentifier
+     * @param x
+     * @param y
+     */
+    public void insertHubLocation(String hubIdentifier, int x, int y) {
+        distrubutionHubModel.createHubsTable();
+        distrubutionHubModel.addHubLocationtoDataBase(hubIdentifier, x, y);
     }
 
     /**
