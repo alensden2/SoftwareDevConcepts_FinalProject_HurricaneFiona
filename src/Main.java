@@ -10,7 +10,7 @@ public class Main {
          * Sample run enviroment
          */
         PowerService powerService = new PowerService();
-        // powerService.addPostalCode("B3J2K9", 55,6);
+        powerService.addPostalCode("A3J2K9", 5522,624424);
 
         Point p = new Point();
         p.setX(3);

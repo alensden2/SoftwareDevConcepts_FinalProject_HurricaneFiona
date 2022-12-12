@@ -62,7 +62,6 @@ public class PowerService {
          * The table still has redundant data this can be avoided by creating a separate
          * table to store the repeating elements
          */
-        System.out.println(location.getX());
         // List to store the set value
         List<String> servicedAreasList = new ArrayList<>();
         servicedAreasList.addAll(servicedAreas);
