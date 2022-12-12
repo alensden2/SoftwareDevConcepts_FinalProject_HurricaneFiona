@@ -1,9 +1,12 @@
 import Controller.DistrubutionHubController;
+import Controller.HubDamageController;
 import Controller.PostalCodeController;
 import Model.DistrubutionHubModel;
+import Model.HubDamageModel;
 import Model.PostalCodeModel;
 import SupportClass.Point;
 import View.DistrubutionHubView;
+import View.HubDamageView;
 import View.PostalCodeView;
 
 import java.util.ArrayList;
@@ -72,5 +75,19 @@ public class PowerService {
         // storing the pincode
         distrubutionHubController.insertHubLocation(hubIdentifier, location.getX(), location.getY());
         return true;
+    }
+
+    /**
+     * For Hub Damage
+     * @param hubIdentifier
+     * @param repairEstimate
+     */
+    void hubDamage ( String hubIdentifier, float repairEstimate ){
+        HubDamageModel hubDamageModel = new HubDamageModel();
+        HubDamageView hubDamageView =new HubDamageView();
+        HubDamageController hubDamageController = new HubDamageController(hubDamageView,hubDamageModel);
+
+        hubDamageController.insertHubDamage(hubIdentifier,repairEstimate);
+        hubDamageController.viewHubDamage(hubIdentifier,repairEstimate);
     }
 }
