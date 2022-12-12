@@ -47,6 +47,15 @@ public class DistrubutionHubModel {
         createTables.createHubsTable();
     }
 
+    /**
+     * This add the data to the new hub table
+     * 
+     * @param hubIdentifier
+     * @param x
+     * @param y
+     * @param postalCode
+     * @return
+     */
     public boolean addHubtoDataBase(String hubIdentifier, int x, int y, String postalCode) {
         Connection connect = null;
         Statement statement = null;
@@ -61,7 +70,8 @@ public class DistrubutionHubModel {
             /**
              * Insert the hubs
              */
-            String stat = "INSERT INTO Hubs (hubIdentifier, x, y, postalCode) VALUES (" + hubIdentifier + "," + x + "," + y + "," + postalCode + ")";
+            String stat = "INSERT INTO Hubs (hubIdentifier, x, y, postalCode) VALUES (\"" + hubIdentifier + "\"," + x
+                    + "," + y + ",\"" + postalCode + "\")";
             resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();
