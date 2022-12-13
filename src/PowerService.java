@@ -1,12 +1,15 @@
 import Controller.DistrubutionHubController;
 import Controller.HubDamageController;
+import Controller.HubRepairController;
 import Controller.PostalCodeController;
 import Model.DistrubutionHubModel;
 import Model.HubDamageModel;
+import Model.HubRepairModel;
 import Model.PostalCodeModel;
 import SupportClass.Point;
 import View.DistrubutionHubView;
 import View.HubDamageView;
+import View.HubRepairView;
 import View.PostalCodeView;
 
 import java.util.ArrayList;
@@ -79,15 +82,66 @@ public class PowerService {
 
     /**
      * For Hub Damage
+     * 
      * @param hubIdentifier
      * @param repairEstimate
      */
-    void hubDamage ( String hubIdentifier, float repairEstimate ){
+    void hubDamage(String hubIdentifier, float repairEstimate) {
         HubDamageModel hubDamageModel = new HubDamageModel();
-        HubDamageView hubDamageView =new HubDamageView();
-        HubDamageController hubDamageController = new HubDamageController(hubDamageView,hubDamageModel);
+        HubDamageView hubDamageView = new HubDamageView();
+        HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
 
-        hubDamageController.insertHubDamage(hubIdentifier,repairEstimate);
-        hubDamageController.viewHubDamage(hubIdentifier,repairEstimate);
+        hubDamageController.insertHubDamage(hubIdentifier, repairEstimate);
+        // hubDamageController.viewHubDamage(hubIdentifier,repairEstimate);
+    }
+
+    /**
+     * Updates the repair task done
+     * Has tackled the partial repair scenerio 
+     * @param hubIdentifier
+     * @param employeeId
+     * @param repairTime
+     * @param inService
+     */
+    void hubRepair(String hubIdentifier, String employeeId, float repairTime, boolean inService) {
+        if (inService == true) {
+            // hub is in service that is repaired
+            // so we can update the time required to repair in the hub damage to 0
+            HubRepairModel hubRepairModel = new HubRepairModel();
+            HubRepairView hubRepairView = new HubRepairView();
+            HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
+
+            hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
+            // hubRepairController.viewInsertedHub(hubIdentifier,employeeId,repairTime,inService);
+
+            // updating the hubdamage to zero
+            HubDamageModel hubDamageModel = new HubDamageModel();
+            HubDamageView hubDamageView = new HubDamageView();
+            HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
+            hubDamageController.updateHubDamage(hubIdentifier, 0);
+
+        } else if (inService == false) {
+            float repairTimeRequired;
+            // storing the repair task done
+            HubRepairModel hubRepairModel = new HubRepairModel();
+            HubRepairView hubRepairView = new HubRepairView();
+            HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
+
+            hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
+
+            // fetching the required repair time value
+            HubDamageModel hubDamageModel = new HubDamageModel();
+            HubDamageView hubDamageView = new HubDamageView();
+            HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
+            repairTimeRequired = Float.parseFloat(hubDamageController.fetchRepairEstimate(hubIdentifier));
+
+            // updating the remaining work to be done
+            // the new repair time would be the subtraction of the hours worked and the req
+            // repair time
+
+            hubDamageController.updateHubDamage(hubIdentifier, Math.abs(repairTime - repairTimeRequired));
+            System.out.println(repairTimeRequired);
+
+        }
     }
 }

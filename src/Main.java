@@ -1,10 +1,13 @@
 import SupportClass.Point;
+import database.DropTables;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] arg) {
+        DropTables dropTables = new DropTables();
+        dropTables.dropAllTables();
         System.out.println("hello worked");
         /**
          * Sample run enviroment
@@ -31,5 +34,12 @@ public class Main {
         powerService.addDistributionHub("uyd7", p2, serviceAreas);
 
         powerService.hubDamage("diuhbhifeeib", 23.2F);
+        powerService.hubDamage("ASN32", 21.3F);
+
+        powerService.hubRepair("diuhbhifeeib", "Alen344", 21.3F, false);
+
+        // drop tables;
+
+
     }
 }

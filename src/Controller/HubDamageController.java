@@ -31,6 +31,26 @@ public class HubDamageController {
     }
 
     /**
+     * Updates the damaged hub hours required to be fixed incase of partial repair
+     * 
+     * @param hubIdentifier
+     * @param repairTimeEstimate
+     */
+    public void updateHubDamage(String hubIdentifier, float repairTimeEstimate) {
+        hubDamageModel.updateHubDamageToDataBase(hubIdentifier, repairTimeEstimate);
+    }
+
+    /**
+     * Fetches the repair time estimate
+     * 
+     * @param hubIdentifier
+     * @return
+     */
+    public String fetchRepairEstimate(String hubIdentifier) {
+        return hubDamageModel.fetchRepairTimeFromDataBase(hubIdentifier);
+    }
+
+    /**
      * view the entered value
      * 
      * @param hubIdentifier

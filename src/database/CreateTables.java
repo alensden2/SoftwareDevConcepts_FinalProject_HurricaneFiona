@@ -49,11 +49,10 @@ public class CreateTables {
              * Stored procedure for getting the customer list
              */
             String stat = "CREATE TABLE IF NOT EXISTS PostalCode(" +
-                    "PostalCodeId int NOT NULL AUTO_INCREMENT, " +
                     "postalCode VARCHAR(6), " +
                     "population int NOT NULL, " +
                     "area int NOT NULL, " +
-                    "PRIMARY KEY (PostalCodeId))";
+                    "PRIMARY KEY (postalCode))";
             resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();
@@ -95,7 +94,7 @@ public class CreateTables {
 
     /**
      * creating location table and converting to second normal form
-     * 
+     *
      * @return
      */
     public boolean createHubLocationTable() {
@@ -125,7 +124,7 @@ public class CreateTables {
 
     /**
      * create hub table
-     * 
+     *
      * @return
      */
     public boolean createHubDamage() {
@@ -143,6 +142,36 @@ public class CreateTables {
              * Stored procedure for getting the customer list
              */
             String stat = "CREATE TABLE IF NOT EXISTS HubDamage (hubIdentifier VARCHAR(50) NOT NULL, repairEstimate float NOT NULL)";
+            resultSet = statement.executeUpdate(stat);
+            statement.close();
+            connect.close();
+        } catch (Exception e) {
+            System.out.println("Connection failed");
+            System.out.println(e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * create hub repair table
+     *
+     * @return
+     */
+    public boolean createHubRepairTable() {
+        Connection connect = null;
+        Statement statement = null;
+        int resultSet;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            connect = DriverManager.getConnection("jdbc:mysql://db.cs.dal.ca:3306?serverTimezone=UTC&useSSL=false",
+                    username, password);
+            statement = connect.createStatement();
+            statement.execute("use alen;");
+            /*
+             * Stored procedure for getting the customer list
+             */
+            String stat = "CREATE TABLE IF NOT EXISTS HubRepair (hubIdentifier VARCHAR(50) NOT NULL, employeeID VARCHAR(50), repairTime float NOT NULL, inService boolean NOT NULL)";
             resultSet = statement.executeUpdate(stat);
             statement.close();
             connect.close();
