@@ -7,6 +7,7 @@ import Model.HubDamageModel;
 import Model.HubRepairModel;
 import Model.PostalCodeModel;
 import ReportingMethods.MostDamagedPostalCode;
+import ReportingMethods.PopulationUnderserved;
 import SupportClass.DamagedPostalCodes;
 import SupportClass.Point;
 import View.DistrubutionHubView;
@@ -163,5 +164,33 @@ public class PowerService {
         // of time, the top 4 is returned
         MostDamagedPostalCode mostDamagedPostalCode = new MostDamagedPostalCode();
         return mostDamagedPostalCode.getMostDamagedPostalCodes(limit);
+    }
+
+    // List<HubImpact> fixOrder ( int limit )
+    List<Integer> rateOfServiceRestoration(float increment) {
+
+        return null;
+    }
+
+    // List<HubImpact> repairPlan ( String startHub, int maxDistance, float maxTime
+    // ){
+    //
+    // return null;
+    // }
+
+    /**
+     * Gets the postal code of the underserved population
+     * 
+     * @param limit
+     * @return
+     */
+    List<String> underservedPostalByPopulation(int limit) {
+        PopulationUnderserved populationUnderserved = new PopulationUnderserved();
+        return populationUnderserved.getPostalCodeBasedOnPopulation(limit);
+    }
+
+    List<String> underservedPostalByArea(int limit) {
+
+        return null;
     }
 }

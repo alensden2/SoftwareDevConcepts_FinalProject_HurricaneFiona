@@ -45,6 +45,7 @@ public class Main {
         powerService.hubDamage("main3", 50);
         // powerService.hubDamage("ASN32", 21.3F);
         List<DamagedPostalCodes> a = powerService.mostDamagedPostalCodes(2);
+        List<String> aa = powerService.underservedPostalByPopulation(3);
         System.out.println(); // powerService.hubRepair("main1", "Alen344", 4, true);
 
         // drop tables;
