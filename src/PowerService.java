@@ -6,6 +6,8 @@ import Model.DistrubutionHubModel;
 import Model.HubDamageModel;
 import Model.HubRepairModel;
 import Model.PostalCodeModel;
+import ReportingMethods.MostDamagedPostalCode;
+import SupportClass.DamagedPostalCodes;
 import SupportClass.Point;
 import View.DistrubutionHubView;
 import View.HubDamageView;
@@ -97,7 +99,8 @@ public class PowerService {
 
     /**
      * Updates the repair task done
-     * Has tackled the partial repair scenerio 
+     * Has tackled the partial repair scenerio
+     * 
      * @param hubIdentifier
      * @param employeeId
      * @param repairTime
@@ -140,8 +143,25 @@ public class PowerService {
             // repair time
 
             hubDamageController.updateHubDamage(hubIdentifier, Math.abs(repairTime - repairTimeRequired));
-            System.out.println(repairTimeRequired);
 
         }
+    }
+
+    int peopleOutOfService() {
+
+        return 0;
+    }
+
+    /**
+     * returns the most damaged postal codes
+     * 
+     * @param limit
+     * @return
+     */
+    List<DamagedPostalCodes> mostDamagedPostalCodes(int limit) {
+        // assumption - in the case of multiple postal codes requiring the same amount
+        // of time, the top 4 is returned
+        MostDamagedPostalCode mostDamagedPostalCode = new MostDamagedPostalCode();
+        return mostDamagedPostalCode.getMostDamagedPostalCodes(limit);
     }
 }
