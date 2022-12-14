@@ -18,7 +18,7 @@ public class Main {
         PowerService powerService = new PowerService();
         powerService.addPostalCode("p1", 3, 5);
         powerService.addPostalCode("p2", 4, 5);
-        powerService.addPostalCode("p3", 10, 2);
+        powerService.addPostalCode("p3", 9, 2);
         powerService.addPostalCode("p4", 6, 8);
         powerService.addPostalCode("p5", 20, 10);
         powerService.addPostalCode("p6", 50, 34);
@@ -35,19 +35,23 @@ public class Main {
         serviceAreas.add("p4");
         serviceAreas.add("p5");
 
-        powerService.addDistributionHub("main1", p, serviceAreas);
+        powerService.addDistributionHub("Main1", p, serviceAreas);
 
         powerService.addDistributionHub("Main2", p2, Collections.singleton("p3"));
         powerService.addDistributionHub("Main2", p2, Collections.singleton("p2"));
         powerService.addDistributionHub("Main3", p2, Collections.singleton("p1"));
+        powerService.addDistributionHub("Main3", p2, Collections.singleton("p3"));
 
-        powerService.hubDamage("main1", 4);
-        powerService.hubDamage("main3", 50);
+        powerService.hubDamage("Main1", 4);
+        powerService.hubDamage("Main3", 50);
+        powerService.hubDamage("Main2", 10);
+
         // powerService.hubDamage("ASN32", 21.3F);
         List<DamagedPostalCodes> a = powerService.mostDamagedPostalCodes(2);
         List<String> aa = powerService.underservedPostalByPopulation(3);
         System.out.println(); // powerService.hubRepair("main1", "Alen344", 4, true);
-        System.out.println(powerService.peopleOutOfService()); ;
+       // System.out.println(powerService.peopleOutOfService()); ;
+        powerService.fixOrder(5);
         //powerService.hubRepair("main3", "alen", 40, true);
         // drop tables;
 

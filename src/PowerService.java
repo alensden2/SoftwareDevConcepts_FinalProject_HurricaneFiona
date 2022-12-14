@@ -3,27 +3,28 @@ import Controller.HubDamageController;
 import Controller.HubRepairController;
 import Controller.PostalCodeController;
 import DTOs.PeopleOutOfServiceDTO;
+import DTOs.TotalPopulationServedByHubDTO;
 import Model.DistrubutionHubModel;
 import Model.HubDamageModel;
 import Model.HubRepairModel;
 import Model.PostalCodeModel;
+import ReportingMethods.FixOrder;
 import ReportingMethods.MostDamagedPostalCode;
 import ReportingMethods.PeopleOutOfService;
 import ReportingMethods.PopulationUnderserved;
 import SupportClass.DamagedPostalCodes;
+import SupportClass.HubImpact;
 import SupportClass.Point;
 import View.DistrubutionHubView;
 import View.HubDamageView;
 import View.HubRepairView;
 import View.PostalCodeView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PowerService {
     Point utmCoordinates = new Point();
+    Map<String, Integer> effectivePopulationServedInOneHub = new HashMap<>();
 
     /**
      * Adds the postal code
@@ -167,6 +168,8 @@ public class PowerService {
                                                                                                   // repair
         int affectedPopulation = peopleOutOfService.getPopulationAffected(postalCodeDetails, hubPerPopulation,
                 repairTimePerPostal);
+        Map<String, Integer> effectivePopulationServedInOneHub = peopleOutOfService.PopulationServedInOneHub();
+        this.effectivePopulationServedInOneHub = effectivePopulationServedInOneHub;
         return affectedPopulation;
     }
 
@@ -183,7 +186,36 @@ public class PowerService {
         return mostDamagedPostalCode.getMostDamagedPostalCodes(limit);
     }
 
-    // List<HubImpact> fixOrder ( int limit )
+    /**
+     * Gets the most imp to least imp hubs according to the impact
+     * @param limit
+     * @return
+     */
+    List<HubImpact> fixOrder(int limit) {
+        FixOrder fixOrder = new FixOrder();
+        List<HubImpact> hubImapact = new ArrayList<>();
+        PeopleOutOfService peopleOutOfService = new PeopleOutOfService();
+        List<PeopleOutOfServiceDTO> postalCodeDetails = peopleOutOfService.fetchPostalCodesDetails();
+        Map<String, Set<String>> hubServingPostals = fixOrder.hubServingPostalCodeMap(postalCodeDetails);
+        peopleOutOfService(); // to refresh the map of effective population
+
+        // gets all the repairTimeForAllHubs
+        Map<String, Float> repairTimeForAllHub = fixOrder.getRepairTimeForAllHubs();
+
+        // gets the total population served by hub
+        Map<String, TotalPopulationServedByHubDTO> totalPopulationServedByHubList = fixOrder
+                .getTotalPopulationServedByHub();
+
+        // gets the total postal code served by one hub
+        Map<String, Integer> hubPerPostalCode = fixOrder.getNoOfPostalCodeServedByHub();
+
+        fixOrder.getTheFixOrderHubs(repairTimeForAllHub, totalPopulationServedByHubList, hubPerPostalCode,
+                this.effectivePopulationServedInOneHub, hubServingPostals);
+
+        /// sort pending
+        return hubImapact;
+    }
+
     List<Integer> rateOfServiceRestoration(float increment) {
 
         return null;

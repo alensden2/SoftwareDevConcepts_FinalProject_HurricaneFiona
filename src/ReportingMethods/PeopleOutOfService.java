@@ -12,6 +12,8 @@ import java.util.*;
 
 public class PeopleOutOfService {
 
+    // effective population served in one postal code
+    Map<String, Integer> effectivePopulationServedInOneHub = new HashMap<>();
     Properties identity = new Properties();
     String username = "";
     String password = "";
@@ -29,6 +31,14 @@ public class PeopleOutOfService {
         } catch (Exception e) {
             return;
         }
+    }
+
+    /**
+     * returns the population under one hub after dividing with no of hubs
+     * This is for the next fxn fix order
+     */
+    public Map<String, Integer> PopulationServedInOneHub() {
+        return this.effectivePopulationServedInOneHub;
     }
 
     /**
@@ -185,9 +195,11 @@ public class PeopleOutOfService {
                 impactedPopulationInCaseMultipleHub = (float) (populationPerPostalCode.get(entry.getKey()))
                         / (float) (HubsPerPostalCode.get(entry.getKey()));
                 populationAffected += impactedPopulationInCaseMultipleHub;
+                effectivePopulationServedInOneHub.put(entry.getKey(), (int) impactedPopulationInCaseMultipleHub);
             }
         }
         // conversion to int as contraint by method
         return (int) populationAffected;
     }
+
 }
