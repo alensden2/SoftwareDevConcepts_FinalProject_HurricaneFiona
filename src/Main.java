@@ -18,7 +18,7 @@ public class Main {
         PowerService powerService = new PowerService();
         powerService.addPostalCode("p1", 3, 5);
         powerService.addPostalCode("p2", 4, 5);
-        powerService.addPostalCode("p3", 1, 2);
+        powerService.addPostalCode("p3", 10, 2);
         powerService.addPostalCode("p4", 6, 8);
         powerService.addPostalCode("p5", 20, 10);
         powerService.addPostalCode("p6", 50, 34);
@@ -47,7 +47,8 @@ public class Main {
         List<DamagedPostalCodes> a = powerService.mostDamagedPostalCodes(2);
         List<String> aa = powerService.underservedPostalByPopulation(3);
         System.out.println(); // powerService.hubRepair("main1", "Alen344", 4, true);
-
+        System.out.println(powerService.peopleOutOfService()); ;
+        //powerService.hubRepair("main3", "alen", 40, true);
         // drop tables;
 
     }

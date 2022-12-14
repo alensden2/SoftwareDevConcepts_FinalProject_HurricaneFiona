@@ -2,11 +2,13 @@ import Controller.DistrubutionHubController;
 import Controller.HubDamageController;
 import Controller.HubRepairController;
 import Controller.PostalCodeController;
+import DTOs.PeopleOutOfServiceDTO;
 import Model.DistrubutionHubModel;
 import Model.HubDamageModel;
 import Model.HubRepairModel;
 import Model.PostalCodeModel;
 import ReportingMethods.MostDamagedPostalCode;
+import ReportingMethods.PeopleOutOfService;
 import ReportingMethods.PopulationUnderserved;
 import SupportClass.DamagedPostalCodes;
 import SupportClass.Point;
@@ -17,6 +19,7 @@ import View.PostalCodeView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class PowerService {
@@ -148,9 +151,23 @@ public class PowerService {
         }
     }
 
+    /**
+     * gives the no of people out of service
+     * 
+     * @return
+     */
     int peopleOutOfService() {
-
-        return 0;
+        PeopleOutOfService peopleOutOfService = new PeopleOutOfService();
+        List<PeopleOutOfServiceDTO> postalCodeDetails = peopleOutOfService.fetchPostalCodesDetails(); // gives the
+                                                                                                      // population
+        Map<String, Integer> hubPerPopulation = peopleOutOfService.getHubsPopulationPerPopulation(postalCodeDetails); // hubs
+                                                                                                                      // per
+                                                                                                                      // population
+        Map<String, Float> repairTimePerPostal = peopleOutOfService.fetchPostalCodesRepairTime(); // time for the hubs
+                                                                                                  // repair
+        int affectedPopulation = peopleOutOfService.getPopulationAffected(postalCodeDetails, hubPerPopulation,
+                repairTimePerPostal);
+        return affectedPopulation;
     }
 
     /**
