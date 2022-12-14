@@ -8,10 +8,7 @@ import Model.DistrubutionHubModel;
 import Model.HubDamageModel;
 import Model.HubRepairModel;
 import Model.PostalCodeModel;
-import ReportingMethods.FixOrder;
-import ReportingMethods.MostDamagedPostalCode;
-import ReportingMethods.PeopleOutOfService;
-import ReportingMethods.PopulationUnderserved;
+import ReportingMethods.*;
 import SupportClass.DamagedPostalCodes;
 import SupportClass.HubImpact;
 import SupportClass.Point;
@@ -170,6 +167,7 @@ public class PowerService {
                 repairTimePerPostal);
         Map<String, Integer> effectivePopulationServedInOneHub = peopleOutOfService.PopulationServedInOneHub();
         this.effectivePopulationServedInOneHub = effectivePopulationServedInOneHub;
+        // calculations are rounded off
         return affectedPopulation;
     }
 
@@ -188,6 +186,7 @@ public class PowerService {
 
     /**
      * Gets the most imp to least imp hubs according to the impact
+     * 
      * @param limit
      * @return
      */
@@ -217,8 +216,44 @@ public class PowerService {
     }
 
     List<Integer> rateOfServiceRestoration(float increment) {
+        RateOfServiceRestoration rateOfServiceRestoration = new RateOfServiceRestoration();
+        List<Integer> rateOfServiceRestorationList = new ArrayList<>();
+        // the increment given is in percentage 5/100 ~ 0.05 this float should be less
+        // than 100 that is 1.00
+        // we need the total population
+        int totalPopulation_TOTAL = rateOfServiceRestoration.getTotalPopulation();
+        // the total people out of service
+        int population_NOTSERVED = peopleOutOfService();
+        float peopleNotHavingPowerWithinRange = 0;
+        // the total people with service
+        // the values may come off to be different as people out of service returns int
+        // this program converts float to int hence dropping the float value to return
+        // int
+        // this is an assumption for this implementation
+        int population_SERVED = totalPopulation_TOTAL - population_NOTSERVED;
 
-        return null;
+        // the total estimated repair time for each hub
+        float timeForRepairAllHubs_TOTAL = rateOfServiceRestoration.getTotalRepairTime();
+        // the rate of service restoration is total popl not having power/ total repair
+        // time for all hub not repaired
+        float rate = ((float) (population_NOTSERVED)) / timeForRepairAllHubs_TOTAL;
+
+        // since increment is percentage it cannot be greater than 100% or 1.00
+        int i = 0;
+        while (i * increment < 1) {
+            // if the population percentage is less than the serviceable population then the
+            // repair time hours is zero
+            if ((((float) (totalPopulation_TOTAL)) * increment * i) < population_SERVED) {
+                rateOfServiceRestorationList.add(0);
+            } else if ((((float) (totalPopulation_TOTAL)) * increment * i) > population_SERVED) {
+                peopleNotHavingPowerWithinRange = Math
+                        .abs(((population_SERVED - (i * increment * totalPopulation_TOTAL))));
+                rateOfServiceRestorationList.add(Math.round(peopleNotHavingPowerWithinRange * rate));
+            }
+            i++;
+        }
+
+        return rateOfServiceRestorationList;
     }
 
     // List<HubImpact> repairPlan ( String startHub, int maxDistance, float maxTime
