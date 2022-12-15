@@ -269,8 +269,13 @@ public class PowerService {
      * @return
      */
     List<String> underservedPostalByPopulation(int limit) {
-        PopulationUnderserved populationUnderserved = new PopulationUnderserved();
-        return populationUnderserved.getPostalCodeBasedOnPopulation(limit);
+        Map<String, Integer> populationAndPostals = new HashMap<>();
+        Map<String, Integer> hubsAndPostals = new HashMap<>();
+        UnderservedPostalCodes underservedPostalCodes = new UnderservedPostalCodes();
+        populationAndPostals = underservedPostalCodes.getPopulationPerPostalCode();
+        hubsAndPostals = underservedPostalCodes.getHubsPerPostalCode();
+
+        return underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
     }
 
     List<String> underservedPostalByArea(int limit) {
