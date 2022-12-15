@@ -22,6 +22,11 @@ import java.util.*;
 public class PowerService {
     Point utmCoordinates = new Point();
     Map<String, Integer> effectivePopulationServedInOneHub = new HashMap<>();
+    Map<String, Float> repairTimeForAllHub = new HashMap<>();
+    Map<String, Integer> hubPerPostalCode = new HashMap<>();
+    Map<String, Set<String>> hubServingPostals = new HashMap<>();
+    Map<String, TotalPopulationServedByHubDTO> totalPopulationServedByHubList = new HashMap<>();
+    List<HubImpact> hubImapact = new ArrayList<>();
 
     /**
      * Adds the postal code
@@ -196,10 +201,12 @@ public class PowerService {
         PeopleOutOfService peopleOutOfService = new PeopleOutOfService();
         List<PeopleOutOfServiceDTO> postalCodeDetails = peopleOutOfService.fetchPostalCodesDetails();
         Map<String, Set<String>> hubServingPostals = fixOrder.hubServingPostalCodeMap(postalCodeDetails);
+        this.hubServingPostals = hubServingPostals;
         peopleOutOfService(); // to refresh the map of effective population
 
         // gets all the repairTimeForAllHubs
         Map<String, Float> repairTimeForAllHub = fixOrder.getRepairTimeForAllHubs();
+        this.repairTimeForAllHub = repairTimeForAllHub;
 
         // gets the total population served by hub
         Map<String, TotalPopulationServedByHubDTO> totalPopulationServedByHubList = fixOrder
@@ -207,10 +214,12 @@ public class PowerService {
 
         // gets the total postal code served by one hub
         Map<String, Integer> hubPerPostalCode = fixOrder.getNoOfPostalCodeServedByHub();
+        this.hubPerPostalCode = hubPerPostalCode;
 
-        hubImapact = fixOrder.getTheFixOrderHubs(repairTimeForAllHub, totalPopulationServedByHubList, hubPerPostalCode, this.effectivePopulationServedInOneHub, hubServingPostals);
-
-        /// sort pending
+        hubImapact = fixOrder.getTheFixOrderHubs(repairTimeForAllHub, totalPopulationServedByHubList, hubPerPostalCode,
+                this.effectivePopulationServedInOneHub, hubServingPostals);
+        this.hubImapact = hubImapact;
+        /// sort pending and limit -
         return hubImapact;
     }
 
@@ -255,11 +264,15 @@ public class PowerService {
         return rateOfServiceRestorationList;
     }
 
-    // List<HubImpact> repairPlan ( String startHub, int maxDistance, float maxTime
-    // ){
-    //
-    // return null;
-    // }
+    List<HubImpact> repairPlan(String startHub, int maxDistance, float maxTime) {
+        Map<String, Point> hubLocations = new HashMap<>();
+        String endHub = null;
+
+        RepairPlan repairPlan = new RepairPlan();
+        hubLocations = repairPlan.getHubCoordinates();
+        endHub = repairPlan.getEndHub(startHub, maxDistance, this.hubImapact, hubLocations);
+        return null;
+    }
 
     /**
      * Gets the postal code of the underserved population
@@ -275,9 +288,10 @@ public class PowerService {
         UnderservedPostalCodes underservedPostalCodes = new UnderservedPostalCodes();
         populationAndPostals = underservedPostalCodes.getPopulationPerPostalCode();
         hubsAndPostals = underservedPostalCodes.getHubsPerPostalCode();
-        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
+        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,
+                populationAndPostals);
 
-        for(int i = 0; i<limit; i++){
+        for (int i = 0; i < limit; i++) {
             underservedPopulations.add(underservedPopulationsAll.get(i));
         }
 
@@ -293,9 +307,10 @@ public class PowerService {
         UnderservedPostalCodes underservedPostalCodes = new UnderservedPostalCodes();
         populationAndPostals = underservedPostalCodes.getAreaPerPostalCode();
         hubsAndPostals = underservedPostalCodes.getHubsPerPostalCode();
-        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
+        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,
+                populationAndPostals);
 
-        for(int i = 0; i<limit; i++){
+        for (int i = 0; i < limit; i++) {
             underservedPopulations.add(underservedPopulationsAll.get(i));
         }
 

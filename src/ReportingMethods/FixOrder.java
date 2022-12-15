@@ -132,6 +132,8 @@ public class FixOrder {
             Map<String, Set<String>> hubServingPostals) {
         List<HubImpact> impactedHubs = new ArrayList<>();
 
+        // ref - https://www.geeksforgeeks.org/how-to-iterate-hashmap-in-java/ dec 15,
+        // 1606 Hrs
         for (Map.Entry<String, Float> entry : repairTimeForAllHubs.entrySet()) {
             if ((repairTimeForAllHubs.containsKey(entry.getKey()))
                     && (repairTimeForAllHubs.get(entry.getKey()) > 0)) {
