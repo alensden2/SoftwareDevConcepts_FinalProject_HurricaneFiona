@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
+import java.util.Map.Entry;
 import java.util.*;
 
 public class UnderservedPostalCodes {
@@ -14,7 +15,7 @@ public class UnderservedPostalCodes {
     String password = "";
     String propertyFilename = "/home/cynos/IdeaProjects/finalProject_B00930528/alen/src/dbConfig.prop";
 
-    public UnderservedPostalCodes(){
+    public UnderservedPostalCodes() {
         /**
          * Reference from lab work
          */
@@ -28,10 +29,10 @@ public class UnderservedPostalCodes {
         }
     }
 
-    public Map<String, Integer> getHubsPerPostalCode(){
+    public Map<String, Integer> getHubsPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
-        Map<String, Integer>  hubsPerPostal = new HashMap<>();
+        Map<String, Integer> hubsPerPostal = new HashMap<>();
         ResultSet resultSet = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -43,7 +44,8 @@ public class UnderservedPostalCodes {
             /**
              * get the postal codes
              */
-            String stat ="SELECT Distinct count(HubServiceAreas.hubIdentifier) as hubs, PostalCode.postalCode FROM alen.PostalCode join HubServiceAreas \n" +
+            String stat = "SELECT Distinct count(HubServiceAreas.hubIdentifier) as hubs, PostalCode.postalCode FROM alen.PostalCode join HubServiceAreas \n"
+                    +
                     "on HubServiceAreas.postalCode = PostalCode.postalCode group by PostalCode.postalCode;";
             resultSet = statement.executeQuery(stat);
 
@@ -60,10 +62,10 @@ public class UnderservedPostalCodes {
 
     }
 
-    public Map<String, Integer> getPopulationPerPostalCode(){
+    public Map<String, Integer> getPopulationPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
-        Map<String, Integer>  populationPerPostal = new HashMap<>();
+        Map<String, Integer> populationPerPostal = new HashMap<>();
         ResultSet resultSet = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -75,11 +77,12 @@ public class UnderservedPostalCodes {
             /**
              * get the postal codes
              */
-            String stat ="select postalCode, population from PostalCode;";
+            String stat = "select postalCode, population from PostalCode;";
             resultSet = statement.executeQuery(stat);
 
             while (resultSet.next()) {
-                populationPerPostal.put(resultSet.getString("postalCode"), Integer.valueOf(resultSet.getString("population")));
+                populationPerPostal.put(resultSet.getString("postalCode"),
+                        Integer.valueOf(resultSet.getString("population")));
             }
             statement.close();
             connect.close();
@@ -91,10 +94,10 @@ public class UnderservedPostalCodes {
 
     }
 
-    public Map<String, Integer> getAreaPerPostalCode(){
+    public Map<String, Integer> getAreaPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
-        Map<String, Integer>  areaPerPostal = new HashMap<>();
+        Map<String, Integer> areaPerPostal = new HashMap<>();
         ResultSet resultSet = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -106,11 +109,11 @@ public class UnderservedPostalCodes {
             /**
              * get the postal codes
              */
-            String stat ="select postalCode, area from PostalCode;";
+            String stat = "select postalCode, area from PostalCode;";
             resultSet = statement.executeQuery(stat);
 
             while (resultSet.next()) {
-                areaPerPostal.put(resultSet.getString("postalCode"), Integer.valueOf(resultSet.getString("hubs")));
+                areaPerPostal.put(resultSet.getString("postalCode"), Integer.valueOf(resultSet.getString("area")));
             }
             statement.close();
             connect.close();
@@ -122,26 +125,52 @@ public class UnderservedPostalCodes {
 
     }
 
-    public List<String> underservedPostalPopulation(Map<String, Integer> hubsPerPostal, Map<String, Integer> populationPerPostal){
+    public List<String> underservedPostalPopulation(Map<String, Integer> hubsPerPostal,
+            Map<String, Integer> populationPerPostal) {
         List<String> underservedPostalsByPopulation = new ArrayList<>();
-        Map<String,Float> underservedPostalsByPopulationMap = new LinkedHashMap<>();
+        Map<String, Float> underservedPostalsByPopulationMap = new LinkedHashMap<>();
         float underservedByPopulation = 0;
 
         for (Map.Entry<String, Integer> entry : populationPerPostal.entrySet()) {
             int populationInOnePostalCode = populationPerPostal.get(entry.getKey());
             int hubInOnePostalCode = hubsPerPostal.get(entry.getKey());
 
-            underservedByPopulation = (float) hubInOnePostalCode/ (float) populationInOnePostalCode;
+            underservedByPopulation = (float) hubInOnePostalCode / (float) populationInOnePostalCode;
 
-            underservedPostalsByPopulationMap.put(entry.getKey(),underservedByPopulation);
+            underservedPostalsByPopulationMap.put(entry.getKey(), underservedByPopulation);
         }
 
-        // Sorting HashMap reference - https://www.benchresources.net/java-how-to-sort-linkedhashmap-by-its-values/
 
-        Set<Map.Entry<String, Float>> underservedPostalsByPopulationMapSet = underservedPostalsByPopulationMap.entrySet();
+        // Sorting HashMap reference -
+        // https://www.benchresources.net/java-how-to-sort-linkedhashmap-by-its-values/
+        // dec 15 02:19 am
 
+        Set<Map.Entry<String, Float>> underservedPostalsByPopulationMapSet = underservedPostalsByPopulationMap
+                .entrySet();
 
+        List<Map.Entry<String, Float>> underservedPostalsByPopulationMapSetListEntry = new ArrayList<Map.Entry<String, Float>>(
+                underservedPostalsByPopulationMapSet);
 
+        Collections.sort(underservedPostalsByPopulationMapSetListEntry,
+                new Comparator<Map.Entry<String, Float>>() {
+
+                    @Override
+                    public int compare(Entry<String, Float> es1,
+                            Entry<String, Float> es2) {
+                        return es1.getValue().compareTo(es2.getValue());
+                    }
+                });
+        underservedPostalsByPopulationMap.clear();
+        for(Map.Entry<String, Float> map : underservedPostalsByPopulationMapSetListEntry){
+            underservedPostalsByPopulationMap.put(map.getKey(), map.getValue());
+        }
+
+        System.out.println("here");
+        for(Map.Entry<String, Float> lhmap :
+                underservedPostalsByPopulationMap.entrySet()){
+            underservedPostalsByPopulation.add(lhmap.getKey());
+        }
         return underservedPostalsByPopulation;
     }
+
 }

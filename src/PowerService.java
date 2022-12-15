@@ -270,15 +270,35 @@ public class PowerService {
     List<String> underservedPostalByPopulation(int limit) {
         Map<String, Integer> populationAndPostals = new HashMap<>();
         Map<String, Integer> hubsAndPostals = new HashMap<>();
+        List<String> underservedPopulationsAll = new ArrayList<>();
+        List<String> underservedPopulations = new ArrayList<>();
         UnderservedPostalCodes underservedPostalCodes = new UnderservedPostalCodes();
         populationAndPostals = underservedPostalCodes.getPopulationPerPostalCode();
         hubsAndPostals = underservedPostalCodes.getHubsPerPostalCode();
+        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
 
-        return underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
+        for(int i = 0; i<limit; i++){
+            underservedPopulations.add(underservedPopulationsAll.get(i));
+        }
+
+        return underservedPopulations;
     }
 
     List<String> underservedPostalByArea(int limit) {
 
-        return null;
+        Map<String, Integer> populationAndPostals = new HashMap<>();
+        Map<String, Integer> hubsAndPostals = new HashMap<>();
+        List<String> underservedPopulationsAll = new ArrayList<>();
+        List<String> underservedPopulations = new ArrayList<>();
+        UnderservedPostalCodes underservedPostalCodes = new UnderservedPostalCodes();
+        populationAndPostals = underservedPostalCodes.getAreaPerPostalCode();
+        hubsAndPostals = underservedPostalCodes.getHubsPerPostalCode();
+        underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,populationAndPostals);
+
+        for(int i = 0; i<limit; i++){
+            underservedPopulations.add(underservedPopulationsAll.get(i));
+        }
+
+        return underservedPopulations;
     }
 }
