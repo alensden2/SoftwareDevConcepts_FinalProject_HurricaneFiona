@@ -192,13 +192,13 @@ public class PeopleOutOfService {
                 // in the list
                 // also greater than 0 since then it is still out of service
                 float impactedPopulationInCaseMultipleHub = 0;
-                impactedPopulationInCaseMultipleHub = (float) (populationPerPostalCode.get(entry.getKey()))
+                impactedPopulationInCaseMultipleHub = (float) (populationPerPostalCode.get(entry.getKey())*HubsPerPostalCode.get(entry.getKey()))
                         / (float) (HubsPerPostalCode.get(entry.getKey()));
                 populationAffected += impactedPopulationInCaseMultipleHub;
-                effectivePopulationServedInOneHub.put(entry.getKey(), (int) impactedPopulationInCaseMultipleHub);
+                effectivePopulationServedInOneHub.put(entry.getKey(), (int) impactedPopulationInCaseMultipleHub/HubsPerPostalCode.get(entry.getKey()));
             }
         }
-        // conversion to int as contraint by method
+        // conversion to int as constraint by method
         return (int) populationAffected;
     }
 

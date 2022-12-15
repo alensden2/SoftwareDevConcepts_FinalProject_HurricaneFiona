@@ -208,8 +208,7 @@ public class PowerService {
         // gets the total postal code served by one hub
         Map<String, Integer> hubPerPostalCode = fixOrder.getNoOfPostalCodeServedByHub();
 
-        fixOrder.getTheFixOrderHubs(repairTimeForAllHub, totalPopulationServedByHubList, hubPerPostalCode,
-                this.effectivePopulationServedInOneHub, hubServingPostals);
+        hubImapact = fixOrder.getTheFixOrderHubs(repairTimeForAllHub, totalPopulationServedByHubList, hubPerPostalCode, this.effectivePopulationServedInOneHub, hubServingPostals);
 
         /// sort pending
         return hubImapact;
