@@ -53,10 +53,10 @@ public class MostDamagedPostalCode {
             /**
              * get the postal codes
              */
-            String stat = "SELECT postalCode, repairEstimate FROM HubServiceAreas \t\n" +
-                    "join HubDamage on \n" +
-                    "HubDamage.hubIdentifier = HubServiceAreas.hubIdentifier \n" +
-                    "ORDER BY repairEstimate desc limit " + limit + ";";
+            String stat = "select PostalCode.postalCode, sum(repairEstimate) as repairEstimate from PostalCode join \n" +
+                    "HubServiceAreas on HubServiceAreas.postalCode = PostalCode.postalCode \n" +
+                    "join HubDamage on HubDamage.hubIdentifier = HubServiceAreas.hubIdentifier \n" +
+                    "group by PostalCode.postalCode order by repairEstimate Desc limit " + limit + ";";
             resultSet = statement.executeQuery(stat);
 
             while (resultSet.next()) {

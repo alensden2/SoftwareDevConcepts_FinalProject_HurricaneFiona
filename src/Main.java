@@ -59,8 +59,9 @@ public class Main {
        // System.out.println(powerService.peopleOutOfService()); ;
         powerService.fixOrder(5);
         powerService.rateOfServiceRestoration(0.10F);
+        List<DamagedPostalCodes> mostDamagedPostalCodes= powerService.mostDamagedPostalCodes(4);
         //powerService.hubRepair("main3", "alen", 40, true);
         // drop tables;
-
+        System.out.println("END");
     }
 }
