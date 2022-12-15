@@ -248,7 +248,7 @@ public class PowerService {
             } else if ((((float) (totalPopulation_TOTAL)) * increment * i) > population_SERVED) {
                 peopleNotHavingPowerWithinRange = Math
                         .abs(((population_SERVED - (i * increment * totalPopulation_TOTAL))));
-                rateOfServiceRestorationList.add(Math.round(peopleNotHavingPowerWithinRange * rate));
+                rateOfServiceRestorationList.add(Math.round(peopleNotHavingPowerWithinRange / rate));
             }
             i++;
         }
