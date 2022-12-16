@@ -1,6 +1,8 @@
 <h1> Final Project </h1>
 <br>
 
+<li><b>The documentation for the program is at finalProject_B00930528/alen/docs
+</b></li>
 <li>The class diagram for the implementation is stored in the docs folder</li>
 <li>Please add dbConfig File in the src dir for testing (xxx.prop)</li> 
 <li>Data from the tables can be dropped by calling the dropAllTables method</li> 
