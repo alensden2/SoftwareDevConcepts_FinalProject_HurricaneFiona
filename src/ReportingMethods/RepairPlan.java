@@ -70,7 +70,12 @@ public class RepairPlan {
         return hubsCoordinates;
 
     }
-
+    
+ 
+    /**RepairPlan */
+    /**
+     * This method gets the most significant hub in the max distances possible
+     */
     public String getEndHub(String startHub, int maxDistance, List<HubImpact> hubImpact,
             Map<String, Point> hubsCoordinates) {
 
@@ -105,6 +110,9 @@ public class RepairPlan {
         return endHub;
     }
 
+    /**
+     * This is the distance formula use 
+     */
     int manhattanDistance(Point hub1, Point hub2) {
         int x1 = hub1.getX();
         int y1 = hub1.getY();

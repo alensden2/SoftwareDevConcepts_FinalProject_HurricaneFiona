@@ -30,6 +30,11 @@ public class RateOfServiceRestoration {
         }
     }
 
+    /**
+     * This gets the total population
+     * 
+     * @return
+     */
     public int getTotalPopulation() {
         Connection connect = null;
         Statement statement = null;
@@ -63,6 +68,11 @@ public class RateOfServiceRestoration {
 
     }
 
+    /**
+     * The total time to repair the hubs
+     * 
+     * @return
+     */
     public float getTotalRepairTime() {
         Connection connect = null;
         Statement statement = null;

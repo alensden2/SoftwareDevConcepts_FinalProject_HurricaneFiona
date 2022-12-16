@@ -29,6 +29,11 @@ public class UnderservedPostalCodes {
         }
     }
 
+    /**
+     * This returns the no of hubs in a postal code
+     * 
+     * @return
+     */
     public Map<String, Integer> getHubsPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
@@ -62,6 +67,11 @@ public class UnderservedPostalCodes {
 
     }
 
+    /**
+     * This returns the no of population per postal code
+     * 
+     * @return
+     */
     public Map<String, Integer> getPopulationPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
@@ -94,6 +104,11 @@ public class UnderservedPostalCodes {
 
     }
 
+    /**
+     * This gets the area per postal code
+     * 
+     * @return
+     */
     public Map<String, Integer> getAreaPerPostalCode() {
         Connection connect = null;
         Statement statement = null;
@@ -125,6 +140,13 @@ public class UnderservedPostalCodes {
 
     }
 
+    /**
+     * Helper method for the most underserved Postal population
+     * 
+     * @param hubsPerPostal
+     * @param populationPerPostal
+     * @return
+     */
     public List<String> underservedPostalPopulation(Map<String, Integer> hubsPerPostal,
             Map<String, Integer> populationPerPostal) {
         List<String> underservedPostalsByPopulation = new ArrayList<>();
@@ -139,7 +161,6 @@ public class UnderservedPostalCodes {
 
             underservedPostalsByPopulationMap.put(entry.getKey(), underservedByPopulation);
         }
-
 
         // Sorting HashMap reference -
         // https://www.benchresources.net/java-how-to-sort-linkedhashmap-by-its-values/
@@ -161,13 +182,12 @@ public class UnderservedPostalCodes {
                     }
                 });
         underservedPostalsByPopulationMap.clear();
-        for(Map.Entry<String, Float> map : underservedPostalsByPopulationMapSetListEntry){
+        for (Map.Entry<String, Float> map : underservedPostalsByPopulationMapSetListEntry) {
             underservedPostalsByPopulationMap.put(map.getKey(), map.getValue());
         }
 
         System.out.println("here");
-        for(Map.Entry<String, Float> lhmap :
-                underservedPostalsByPopulationMap.entrySet()){
+        for (Map.Entry<String, Float> lhmap : underservedPostalsByPopulationMap.entrySet()) {
             underservedPostalsByPopulation.add(lhmap.getKey());
         }
         return underservedPostalsByPopulation;
