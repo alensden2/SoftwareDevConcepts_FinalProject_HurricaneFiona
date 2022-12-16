@@ -268,4 +268,9 @@ public class FixOrder {
 
         return requiredPopulation;
     }
+
+    public static void sort(ArrayList<HubImpact> list) {
+
+        // list.sort((o1, o2) -> (o1.getImpactValue().compareTo(o2.getImpactValue())));
+    }
 }

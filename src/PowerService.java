@@ -41,9 +41,11 @@ public class PowerService {
          * Setting instance of view and model
          * They are accessed through the controller
          */
-        if (postalCode == null || postalCode == "") {
+
+        if (postalCode == null || postalCode == "" || population < 0 || area < 0) {
             return false;
         } else {
+            postalCode = postalCode.toUpperCase();
             PostalCodeModel postalCodeModel = new PostalCodeModel();
             PostalCodeView postalCodeView = new PostalCodeView();
             PostalCodeController postalCodeController = new PostalCodeController(postalCodeModel, postalCodeView);
@@ -105,12 +107,17 @@ public class PowerService {
      */
     void hubDamage(String hubIdentifier, float repairEstimate) {
         try {
-            HubDamageModel hubDamageModel = new HubDamageModel();
-            HubDamageView hubDamageView = new HubDamageView();
-            HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
+            if (repairEstimate < 0) {
+                throw new RuntimeException("repairEstimate cannot be negative");
+            } else {
+                HubDamageModel hubDamageModel = new HubDamageModel();
+                HubDamageView hubDamageView = new HubDamageView();
+                HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
 
-            hubDamageController.insertHubDamage(hubIdentifier, repairEstimate);
-            // hubDamageController.viewHubDamage(hubIdentifier,repairEstimate);
+                hubDamageController.insertHubDamage(hubIdentifier, repairEstimate);
+                // hubDamageController.viewHubDamage(hubIdentifier,repairEstimate);
+            }
+
         } catch (Exception e) {
             System.out.println("Something went wrong please try again : " + e.getMessage());
         }
@@ -127,43 +134,47 @@ public class PowerService {
      */
     void hubRepair(String hubIdentifier, String employeeId, float repairTime, boolean inService) {
         try {
-            if (inService == true) {
-                // hub is in service that is repaired
-                // so we can update the time required to repair in the hub damage to 0
-                HubRepairModel hubRepairModel = new HubRepairModel();
-                HubRepairView hubRepairView = new HubRepairView();
-                HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
+            if (repairTime < 0) {
+                throw new RuntimeException("repair time cannot be negative");
+            } else {
+                if (inService == true) {
+                    // hub is in service that is repaired
+                    // so we can update the time required to repair in the hub damage to 0
+                    HubRepairModel hubRepairModel = new HubRepairModel();
+                    HubRepairView hubRepairView = new HubRepairView();
+                    HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
 
-                hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
-                // hubRepairController.viewInsertedHub(hubIdentifier,employeeId,repairTime,inService);
+                    hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
+                    // hubRepairController.viewInsertedHub(hubIdentifier,employeeId,repairTime,inService);
 
-                // updating the hubdamage to zero
-                HubDamageModel hubDamageModel = new HubDamageModel();
-                HubDamageView hubDamageView = new HubDamageView();
-                HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
-                hubDamageController.updateHubDamage(hubIdentifier, 0);
+                    // updating the hubdamage to zero
+                    HubDamageModel hubDamageModel = new HubDamageModel();
+                    HubDamageView hubDamageView = new HubDamageView();
+                    HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
+                    hubDamageController.updateHubDamage(hubIdentifier, 0);
 
-            } else if (inService == false) {
-                float repairTimeRequired;
-                // storing the repair task done
-                HubRepairModel hubRepairModel = new HubRepairModel();
-                HubRepairView hubRepairView = new HubRepairView();
-                HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
+                } else if (inService == false) {
+                    float repairTimeRequired;
+                    // storing the repair task done
+                    HubRepairModel hubRepairModel = new HubRepairModel();
+                    HubRepairView hubRepairView = new HubRepairView();
+                    HubRepairController hubRepairController = new HubRepairController(hubRepairView, hubRepairModel);
 
-                hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
+                    hubRepairController.insertHubRepair(hubIdentifier, employeeId, repairTime, inService);
 
-                // fetching the required repair time value
-                HubDamageModel hubDamageModel = new HubDamageModel();
-                HubDamageView hubDamageView = new HubDamageView();
-                HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
-                repairTimeRequired = Float.parseFloat(hubDamageController.fetchRepairEstimate(hubIdentifier));
+                    // fetching the required repair time value
+                    HubDamageModel hubDamageModel = new HubDamageModel();
+                    HubDamageView hubDamageView = new HubDamageView();
+                    HubDamageController hubDamageController = new HubDamageController(hubDamageView, hubDamageModel);
+                    repairTimeRequired = Float.parseFloat(hubDamageController.fetchRepairEstimate(hubIdentifier));
 
-                // updating the remaining work to be done
-                // the new repair time would be the subtraction of the hours worked and the req
-                // repair time
+                    // updating the remaining work to be done
+                    // the new repair time would be the subtraction of the hours worked and the req
+                    // repair time
 
-                hubDamageController.updateHubDamage(hubIdentifier, Math.abs(repairTime - repairTimeRequired));
+                    hubDamageController.updateHubDamage(hubIdentifier, Math.abs(repairTime - repairTimeRequired));
 
+                }
             }
         } catch (Exception e) {
             System.out.println("Something went wrong please try again : " + e.getMessage());
@@ -206,8 +217,14 @@ public class PowerService {
         } else {
             // assumption - in the case of multiple postal codes requiring the same amount
             // of time, the top 4 is returned
+            List<DamagedPostalCodes> damagedCodesList = new ArrayList<>();
             MostDamagedPostalCode mostDamagedPostalCode = new MostDamagedPostalCode();
-            return mostDamagedPostalCode.getMostDamagedPostalCodes(limit);
+            try {
+                damagedCodesList = mostDamagedPostalCode.getMostDamagedPostalCodes(limit);
+            } catch (Exception e) {
+                System.out.println("please check the table or the value of Limit (may exceed the total)");
+            }
+            return damagedCodesList;
         }
     }
 
@@ -223,6 +240,8 @@ public class PowerService {
         } else {
             FixOrder fixOrder = new FixOrder();
             List<HubImpact> hubImapact = new ArrayList<>();
+            List<HubImpact> hubImapactSorted = new ArrayList<>();
+
             PeopleOutOfService peopleOutOfService = new PeopleOutOfService();
             List<PeopleOutOfServiceDTO> postalCodeDetails = peopleOutOfService.fetchPostalCodesDetails();
             Map<String, Set<String>> hubServingPostals = fixOrder.hubServingPostalCodeMap(postalCodeDetails);
@@ -242,7 +261,17 @@ public class PowerService {
                     hubPerPostalCode, this.effectivePopulationServedInOneHub, hubServingPostals);
 
             /// sort pending
-            return hubImapact;
+            Collections.sort(hubImapact);
+
+            if (limit >= hubImapact.size()) {
+                hubImapactSorted = hubImapact;
+            } else {
+                for (int i = 0; i < limit; i++) {
+                    hubImapactSorted.add(hubImapact.get(i));
+                }
+            }
+
+            return hubImapactSorted;
         }
     }
 
@@ -300,6 +329,15 @@ public class PowerService {
         hubLocations = repairPlan.getHubCoordinates();
         endHub = repairPlan.getEndHub(startHub, maxDistance, this.hubImapact, hubLocations);
         // incomplete method completed up to end hub
+        /**
+         *
+         * This can be solved by brute force depth first search using backtracking
+         * Various subtrees can be checked to see if following the constraints
+         * If not the entire tree can be dropped and the state can be explored by going
+         * one step behind and checking for other conditions
+         * If a tress follows all the conditions that is the best path to repair all
+         * hubs
+         */
         return null;
     }
 
@@ -323,8 +361,12 @@ public class PowerService {
             underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,
                     populationAndPostals);
 
-            for (int i = 0; i < limit; i++) {
-                underservedPopulations.add(underservedPopulationsAll.get(i));
+            if (limit >= underservedPopulationsAll.size()) {
+                underservedPopulations = underservedPopulationsAll;
+            } else {
+                for (int i = 0; i < limit; i++) {
+                    underservedPopulations.add(underservedPopulationsAll.get(i));
+                }
             }
 
             return underservedPopulations;
@@ -346,8 +388,12 @@ public class PowerService {
             underservedPopulationsAll = underservedPostalCodes.underservedPostalPopulation(hubsAndPostals,
                     populationAndPostals);
 
-            for (int i = 0; i < limit; i++) {
-                underservedPopulations.add(underservedPopulationsAll.get(i));
+            if (limit >= underservedPopulationsAll.size()) {
+                underservedPopulations = underservedPopulationsAll;
+            } else {
+                for (int i = 0; i < limit; i++) {
+                    underservedPopulations.add(underservedPopulationsAll.get(i));
+                }
             }
 
             return underservedPopulations;
